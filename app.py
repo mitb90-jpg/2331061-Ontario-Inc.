@@ -16,8 +16,11 @@ header_col1, header_col2 = st.columns([1, 6])
 with header_col1:
     st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=100)
 
-with header_col2:
-    st.markdown("### Prime Accounting and Tax")
+with col2:
+    st.markdown(
+        "<h1 style='color:#1f4e79; font-size:42px; font-weight:bold;'>Prime Accounting and Tax</h1>",
+        unsafe_allow_html=True
+    )
     st.caption("2331061 Ontario Inc.")
 
 st.divider()
