@@ -155,11 +155,18 @@ if uploaded_file is not None:
     st.dataframe(summary_df, use_container_width=True, hide_index=True)
 
     # ---------------- DOWNLOAD ----------------
-    st.download_button(
-        "⬇️ Download Excel File",
-        data=df.to_excel(index=False, engine="openpyxl"),
-        file_name="categorized_financials.xlsx"
-    )
+import io
 
-else:
-    st.info("Please upload an Excel file to begin.")
+output = io.BytesIO()
+
+with pd.ExcelWriter(output, engine="openpyxl") as writer:
+    df.to_excel(writer, index=False)
+
+output.seek(0)
+
+st.download_button(
+    "⬇️ Download Excel File",
+    data=output,
+    file_name="categorized_financials.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
