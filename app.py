@@ -60,7 +60,7 @@ if uploaded_file is not None:
         "Category"
     ] = "Loan to world eyewear"
 
-        df.loc[
+    df.loc[
         df["Debit"].notna() &
         df["Description"].astype(str).str.contains("TRANSFER FROM", case=False, na=False),
         "Category"
