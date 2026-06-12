@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -132,6 +133,26 @@ if uploaded_file is not None:
     col6.metric("Investment Income Amount", f"${investment_amount:,.2f}")
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
+
+    # ---------------- CATEGORY PIE CHART ----------------
+st.subheader("🥧 Category Distribution")
+
+category_counts = (
+    df["Category"]
+    .value_counts()
+)
+
+fig, ax = plt.subplots(figsize=(6, 6))
+
+ax.pie(
+    category_counts,
+    labels=category_counts.index,
+    autopct="%1.1f%%"
+)
+
+ax.set_title("Transaction Categories")
+
+st.pyplot(fig)
 
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
