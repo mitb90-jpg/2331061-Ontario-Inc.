@@ -157,15 +157,21 @@ if uploaded_file is not None:
     # ---------------- DOWNLOAD ----------------
 import io
 
-output = io.BytesIO()
+if uploaded_file is not None and not df.empty:
 
-df.to_excel(output, index=False, engine="openpyxl")
+    output = io.BytesIO()
 
-output.seek(0)
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Transactions")
 
-st.download_button(
-    "⬇️ Download Excel File",
-    data=output,
-    file_name="categorized_financials.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)
+    output.seek(0)
+
+    st.download_button(
+        "⬇️ Download Excel File",
+        data=output,
+        file_name="categorized_financials.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+else:
+    st.warning("No data available to download")
