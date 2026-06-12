@@ -129,8 +129,7 @@ if uploaded_file is not None:
 # ---------------- PIE CHART ----------------
 st.subheader("🥧 Financial Distribution")
 
-amounts = {
-"Revenue": revenue_amount,
+amounts = {"Revenue": revenue_amount,
     "Investment Income": investment_amount,
     "Loan": loan_amount,
     "Bank Charges": bank_charge_amount
