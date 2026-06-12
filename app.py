@@ -67,7 +67,7 @@ if uploaded_file is not None:
     df = df.dropna(axis=1, how="all")
     df = df.dropna(how="all")
 
-    df["Category"] = ""
+    df.insert(0, "S.No", range(1, len(df) + 1))
 
     # CREDIT RULE
     credit_mask = (
