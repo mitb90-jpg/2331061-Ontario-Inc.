@@ -25,22 +25,22 @@ uploaded_file = st.sidebar.file_uploader(
 # ---------------- MAIN APP ----------------
 if uploaded_file is not None:
 
-    # ---------------- READ FILE ----------------
+    # READ FILE
     df = pd.read_excel(uploaded_file)
 
-    # ---------------- CLEAN DATA ----------------
+    # CLEAN DATA
     df.columns = df.columns.str.strip()
     df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
     df = df.dropna(axis=1, how="all")
     df = df.dropna(how="all")
 
-    # ---------------- CATEGORY COLUMN ----------------
+    # CATEGORY COLUMN
     df["Category"] = ""
 
-    # ---------------- CREDIT RULE ----------------
+    # CREDIT RULE
     credit_mask = (
-        df["Credit"].notna() &
-        df["Description"].astype(str).str.contains(
+        df["Credit"].notna()
+        & df["Description"].astype(str).str.contains(
             "Proceeds|Deposit",
             case=False,
             na=False
@@ -49,39 +49,50 @@ if uploaded_file is not None:
 
     df.loc[credit_mask, "Category"] = "Revenue"
 
-    # ---------------- DEBIT RULES ----------------
+    # DEBIT RULES
     df.loc[
-        df["Debit"].notna() &
-        df["Description"].astype(str).str.contains("CHQ", na=False),
+        df["Debit"].notna()
+        & df["Description"].astype(str).str.contains("CHQ", na=False),
         "Category"
     ] = "Loan to world eyewear"
 
     df.loc[
-        df["Debit"].notna() &
-        df["Description"].astype(str).str.contains("TRANSFER TO", case=False, na=False),
+        df["Debit"].notna()
+        & df["Description"].astype(str).str.contains(
+            "TRANSFER TO",
+            case=False,
+            na=False
+        ),
         "Category"
     ] = "Loan to world eyewear"
 
     df.loc[
-        df["Debit"].notna() &
-        df["Description"].astype(str).str.contains("TRANSFER OTHER", case=False, na=False),
+        df["Debit"].notna()
+        & df["Description"].astype(str).str.contains(
+            "TRANSFER OTHER",
+            case=False,
+            na=False
+        ),
         "Category"
     ] = "Investment income"
 
     df.loc[
-        df["Debit"].notna() &
-        df["Description"].astype(str).str.contains("SERVICE CHARGE", case=False, na=False),
+        df["Debit"].notna()
+        & df["Description"].astype(str).str.contains(
+            "SERVICE CHARGE",
+            case=False,
+            na=False
+        ),
         "Category"
     ] = "Interest and Bank charges"
 
-    # ---------------- OUTPUT TABLE ----------------
+    # OUTPUT TABLE
     st.subheader("📊 Categorized Transactions")
     st.dataframe(df, use_container_width=True)
 
-    # ---------------- SUMMARY DASHBOARD ----------------
+    # SUMMARY DASHBOARD
     st.subheader("📊 Summary Dashboard")
 
-    # Transaction Counts
     revenue_count = (df["Category"] == "Revenue").sum()
     bank_charges_count = (df["Category"] == "Interest and Bank charges").sum()
     loan_count = (df["Category"] == "Loan to world eyewear").sum()
@@ -96,7 +107,7 @@ if uploaded_file is not None:
     col3.metric("Loan Transactions", loan_count)
     col4.metric("Investment Income Transactions", investment_count)
 
-    # Financial Amounts
+    # FINANCIAL AMOUNTS
     revenue_amount = df.loc[
         df["Category"] == "Revenue",
         "Credit"
@@ -126,48 +137,56 @@ if uploaded_file is not None:
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
-# ---------------- PIE CHART ----------------
-st.subheader("🥧 Financial Distribution")
-amounts = {"Revenue": revenue_amount,"Investment Income": investment_amount,"Loan": loan_amount,"Bank Charges": bank_charge_amount}
+    # PIE CHART
+    st.subheader("🥧 Financial Distribution")
 
-amounts = {k: v for k, v in amounts.items() if v > 0}
+    amounts = {
+        "Revenue": revenue_amount,
+        "Investment Income": investment_amount,
+        "Loan": loan_amount,
+        "Bank Charges": bank_charge_amount
+    }
 
-if amounts:
+    amounts = {k: v for k, v in amounts.items() if v > 0}
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    if amounts:
+        fig, ax = plt.subplots(figsize=(6, 6))
 
-    ax.pie(
-        amounts.values(),
-        labels=amounts.keys(),
-        autopct="%1.1f%%"
+        ax.pie(
+            amounts.values(),
+            labels=amounts.keys(),
+            autopct="%1.1f%%"
+        )
+
+        ax.set_title("Category Share of Total Amount")
+
+        st.pyplot(fig)
+
+    # CATEGORY AMOUNTS TABLE
+    st.subheader("📋 Category Amounts")
+
+    summary_df = pd.DataFrame({
+        "Category": list(amounts.keys()),
+        "Amount": [f"${v:,.2f}" for v in amounts.values()]
+    })
+
+    st.dataframe(
+        summary_df,
+        use_container_width=True,
+        hide_index=True
     )
 
-    ax.set_title("Category Share of Total Amount")
+    # DOWNLOAD FILE
+    output_file = "categorized_financials.xlsx"
 
-    st.pyplot(fig)
+    df.to_excel(output_file, index=False)
 
-# ---------------- CATEGORY AMOUNTS TABLE ----------------
-st.subheader("📋 Category Amounts")
+    with open(output_file, "rb") as f:
+        st.download_button(
+            "⬇️ Download Categorized File",
+            f,
+            file_name="categorized_financials.xlsx"
+        )
 
-summary_df = pd.DataFrame({
-    "Category": list(amounts.keys()),
-    "Amount": [f"${v:,.2f}" for v in amounts.values()]
-})
-
-st.dataframe(
-    summary_df,
-    use_container_width=True,
-    hide_index=True
-)
-
-# ---------------- DOWNLOAD ----------------
-output_file = "categorized_financials.xlsx"
-
-df.to_excel(output_file, index=False)
-
-with open(output_file, "rb") as f:
-    st.download_button(
-        "⬇️ Download Categorized File",
-        f,
-        file_name="categorized_financials.xlsx"
-    )
+else:
+    st.info("Please upload an Excel file to begin.")
