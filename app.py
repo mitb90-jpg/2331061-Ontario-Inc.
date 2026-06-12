@@ -10,35 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- CSS ----------------
-st.markdown("""
-<style>
-.main-title {
-    font-size: 34px;
-    font-weight: 700;
-    color: #1f4e79;
-}
-
-.sub-title {
-    font-size: 18px;
-    color: #6c757d;
-}
-
-.section {
-    font-size: 22px;
-    font-weight: 600;
-    color: #0b3d91;
-    margin-top: 20px;
-}
-
-div[data-testid="metric-container"] {
-    background-color: #f4f6f9;
-    border-radius: 10px;
-    padding: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # ---------------- HEADER ----------------
 col1, col2 = st.columns([1, 6])
 
@@ -46,12 +17,12 @@ with col1:
     st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=100)
 
 with col2:
-    st.markdown('<div class="main-title">Prime Accounting and Tax</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">2331061 Ontario Inc.</div>', unsafe_allow_html=True)
+    st.markdown("### Prime Accounting and Tax")
+    st.caption("2331061 Ontario Inc.")
 
 st.divider()
 
-# ---------------- SIDEBAR ----------------
+# ---------------- FILE UPLOAD ----------------
 uploaded_file = st.sidebar.file_uploader(
     "Upload Excel File",
     type=["xlsx"]
@@ -62,26 +33,31 @@ if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
-    # CLEAN DATA
+    # ---------------- CLEAN DATA ----------------
     df.columns = df.columns.str.strip()
     df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
     df = df.dropna(axis=1, how="all")
     df = df.dropna(how="all")
 
-    # CATEGORY COLUMN
+    # ---------------- FIX DATE FORMAT ----------------
+    if "Date" in df.columns:
+        df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
+
+    # ---------------- CATEGORY COLUMN ----------------
     df["Category"] = ""
 
-    # SERIAL NUMBER
-    df.insert(0, "S.No", range(1, len(df) + 1))
+    # ---------------- SERIAL NUMBER (SAFE) ----------------
+    if "S.No" not in df.columns:
+        df.insert(0, "S.No", range(1, len(df) + 1))
 
-    # CREDIT RULE
+    # ---------------- CREDIT RULE ----------------
     credit_mask = (
         df["Credit"].notna() &
         df["Description"].astype(str).str.contains("Proceeds|Deposit", case=False, na=False)
     )
     df.loc[credit_mask, "Category"] = "Revenue"
 
-    # DEBIT RULES
+    # ---------------- DEBIT RULES ----------------
     df.loc[
         df["Debit"].notna() &
         df["Description"].astype(str).str.contains("CHQ", na=False),
@@ -107,11 +83,11 @@ if uploaded_file is not None:
     ] = "Interest and Bank charges"
 
     # ---------------- TABLE ----------------
-    st.markdown('<div class="section">📊 Categorized Transactions</div>', unsafe_allow_html=True)
+    st.subheader("📊 Categorized Transactions")
     st.dataframe(df, use_container_width=True)
 
     # ---------------- SUMMARY ----------------
-    st.markdown('<div class="section">📊 Summary Dashboard</div>', unsafe_allow_html=True)
+    st.subheader("📊 Summary Dashboard")
 
     revenue_count = (df["Category"] == "Revenue").sum()
     bank_charges_count = (df["Category"] == "Interest and Bank charges").sum()
@@ -131,17 +107,17 @@ if uploaded_file is not None:
     bank_charge_amount = df.loc[df["Category"] == "Interest and Bank charges", "Debit"].fillna(0).sum()
     loan_amount = df.loc[df["Category"] == "Loan to world eyewear", "Debit"].fillna(0).sum()
 
-    # ---------------- PIE DATA ----------------
+    # ---------------- PIE CHART ----------------
+    st.subheader("🥧 Financial Distribution")
+
     amounts = {
         "Revenue": revenue_amount,
         "Investment": investment_amount,
         "Loan": loan_amount,
         "Bank Charges": bank_charge_amount
     }
-    amounts = {k: v for k, v in amounts.items() if v > 0}
 
-    # ---------------- PIE CHART ----------------
-    st.markdown('<div class="section">🥧 Category Distribution</div>', unsafe_allow_html=True)
+    amounts = {k: v for k, v in amounts.items() if v > 0}
 
     if amounts:
         fig, ax = plt.subplots()
@@ -150,7 +126,7 @@ if uploaded_file is not None:
         st.pyplot(fig)
 
     # ---------------- SUMMARY TABLE ----------------
-    st.markdown('<div class="section">📋 Category Summary</div>', unsafe_allow_html=True)
+    st.subheader("📋 Category Summary")
 
     summary_df = pd.DataFrame({
         "Category": list(amounts.keys()),
