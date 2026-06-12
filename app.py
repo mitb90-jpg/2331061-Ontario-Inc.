@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import io
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -61,17 +62,17 @@ if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
-# CLEAN DATA
-df.columns = df.columns.str.strip()
-df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
-df = df.dropna(axis=1, how="all")
-df = df.dropna(how="all")
+    # CLEAN DATA
+    df.columns = df.columns.str.strip()
+    df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
+    df = df.dropna(axis=1, how="all")
+    df = df.dropna(how="all")
 
-# CATEGORY COLUMN
-df["Category"] = ""
+    # CATEGORY COLUMN
+    df["Category"] = ""
 
-# SERIAL NUMBER (ADD HERE)
-df.insert(0, "S.No", range(1, len(df) + 1))
+    # SERIAL NUMBER
+    df.insert(0, "S.No", range(1, len(df) + 1))
 
     # CREDIT RULE
     credit_mask = (
@@ -148,7 +149,7 @@ df.insert(0, "S.No", range(1, len(df) + 1))
         ax.set_title("Financial Distribution")
         st.pyplot(fig)
 
-    # ---------------- TABLE ----------------
+    # ---------------- SUMMARY TABLE ----------------
     st.markdown('<div class="section">📋 Category Summary</div>', unsafe_allow_html=True)
 
     summary_df = pd.DataFrame({
@@ -159,10 +160,6 @@ df.insert(0, "S.No", range(1, len(df) + 1))
     st.dataframe(summary_df, use_container_width=True, hide_index=True)
 
     # ---------------- DOWNLOAD ----------------
-import io
-
-if uploaded_file is not None and not df.empty:
-
     output = io.BytesIO()
 
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
@@ -178,4 +175,4 @@ if uploaded_file is not None and not df.empty:
     )
 
 else:
-    st.warning("No data available to download")
+    st.info("Please upload an Excel file to begin.")
