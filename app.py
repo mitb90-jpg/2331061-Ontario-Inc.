@@ -159,8 +159,7 @@ import io
 
 output = io.BytesIO()
 
-with pd.ExcelWriter(output, engine="openpyxl") as writer:
-    df.to_excel(writer, index=False)
+df.to_excel(output, index=False, engine="openpyxl")
 
 output.seek(0)
 
