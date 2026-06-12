@@ -13,7 +13,7 @@ st.set_page_config(
 col1, col2 = st.columns([1, 5])
 
 with col1:
-    st.image("logo.jpeg", width=120)
+    st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=120)
 
 with col2:
     st.title("🏢 Prime Accounting and Tax")
