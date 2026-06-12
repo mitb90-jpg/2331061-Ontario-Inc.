@@ -34,10 +34,8 @@ if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 
     # ---------------- CLEAN DATA ----------------
-    df.columns = df.columns.str.strip()
-    df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
-    df = df.dropna(axis=1, how="all")
-    df = df.dropna(how="all")
+df.insert(0, "S.No", range(1, len(df) + 1))
+df = df.reset_index(drop=True)
 
     # ---------------- FIX DATE FORMAT ----------------
     if "Date" in df.columns:
