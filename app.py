@@ -85,19 +85,50 @@ else:
     st.info("Upload a file from the sidebar to begin")
 
 # ---------------- SUMMARY DASHBOARD ----------------
-st.subheader("📊 Summary Dashboard")
+if uploaded_file is not None:
 
-# Revenue count
-revenue_count = (df["Category"] == "Revenue").sum()
+    df = pd.read_excel(uploaded_file)
 
-# Bank charges count
-bank_charges = (df["Category"] == "Bank Charges").sum()
+    df.columns = df.columns.str.strip()
+    df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
+    df = df.dropna(axis=1, how="all")
+    df = df.dropna(how="all")
 
-# Loan / transfer count
-loan_count = df["Category"].str.contains("Loan", na=False).sum()
+    df["Category"] = ""
 
-col1, col2, col3 = st.columns(3)
+    # ---------------- RULES ----------------
+    credit_mask = (
+        df["Credit"].notna() &
+        df["Description"].astype(str).str.contains(
+            "Deposit Midtown|Proceeds|Deposit Himilton",
+            case=False,
+            na=False
+        )
+    )
 
-col1.metric("Revenue Transactions", revenue_count)
-col2.metric("Bank Charges", bank_charges)
-col3.metric("Loan / Transfer", loan_count)
+    df.loc[credit_mask, "Category"] = "Revenue"
+
+    df.loc[
+        df["Debit"].notna() &
+        df["Description"].astype(str).str.contains("SERVICE CHARGE", case=False, na=False),
+        "Category"
+    ] = "Bank Charges"
+
+    # ---------------- OUTPUT TABLE ----------------
+    st.dataframe(df, use_container_width=True)
+
+    # ---------------- SUMMARY (NOW SAFE) ----------------
+    st.subheader("📊 Summary Dashboard")
+
+    revenue_count = (df["Category"] == "Revenue").sum()
+    bank_charges = (df["Category"] == "Bank Charges").sum()
+    loan_count = df["Category"].str.contains("Loan", na=False).sum()
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Revenue Transactions", revenue_count)
+    col2.metric("Bank Charges", bank_charges)
+    col3.metric("Loan / Transfer", loan_count)
+
+else:
+    st.info("Please upload a file to continue")
