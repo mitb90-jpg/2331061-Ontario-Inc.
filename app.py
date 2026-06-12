@@ -82,18 +82,9 @@ if uploaded_file is not None:
 
     # Transaction Counts
     revenue_count = (df["Category"] == "Revenue").sum()
-
-    bank_charges_count = (
-        df["Category"] == "Interest and Bank charges"
-    ).sum()
-
-    loan_count = (
-        df["Category"] == "Loan to world eyewear"
-    ).sum()
-
-    investment_count = (
-        df["Category"] == "Investment income"
-    ).sum()
+    bank_charges_count = (df["Category"] == "Interest and Bank charges").sum()
+    loan_count = (df["Category"] == "Loan to world eyewear").sum()
+    investment_count = (df["Category"] == "Investment income").sum()
 
     st.markdown("### Transaction Counts")
 
@@ -134,32 +125,36 @@ if uploaded_file is not None:
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
-# ---------------- CATEGORY PIE CHART BY AMOUNT ----------------
-st.subheader("🥧 Category Distribution by Amount")
+    # ---------------- PIE CHART ----------------
+    st.subheader("🥧 Category Distribution by Amount")
 
-amounts = {
-    "Revenue": revenue_amount,
-    "Investment Income": investment_amount,
-    "Loan": loan_amount,
-    "Bank Charges": bank_charge_amount
-}
+    amounts = {
+        "Revenue": revenue_amount,
+        "Investment Income": investment_amount,
+        "Loan": loan_amount,
+        "Bank Charges": bank_charge_amount
+    }
 
-amounts = {k: v for k, v in amounts.items() if v > 0}
+    amounts = {k: v for k, v in amounts.items() if v > 0}
 
-fig, ax = plt.subplots(figsize=(6, 6))
+    if amounts:
+        import matplotlib.pyplot as plt
 
-ax.pie(
-    amounts.values(),
-    labels=amounts.keys(),
-    autopct="%1.1f%%"
-)
+        fig, ax = plt.subplots(figsize=(6, 6))
 
-ax.set_title("Financial Distribution by Amount")
+        ax.pie(
+            amounts.values(),
+            labels=amounts.keys(),
+            autopct="%1.1f%%"
+        )
 
-st.pyplot(fig)
+        ax.set_title("Financial Distribution by Amount")
+
+        st.pyplot(fig)
 
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
+
     df.to_excel(output_file, index=False)
 
     with open(output_file, "rb") as f:
