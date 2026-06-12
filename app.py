@@ -168,6 +168,3 @@ st.pyplot(fig)
             f,
             file_name="categorized_financials.xlsx"
         )
-
-else:
-    st.info("Please upload an Excel file from the sidebar to start processing.")
