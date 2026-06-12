@@ -1,2 +1,3 @@
-app.py
-requirements.txt
+git add logo.jpeg
+git commit -m "add logo image"
+git push
