@@ -145,7 +145,7 @@ if uploaded_file is not None:
         ax.pie(
             amounts.values(),
             labels=amounts.keys(),
-            autopct="%1.1f%%"
+            autopct=lambda pct: f"${pct/100 * sum(amounts.values()):,.0f}"
         )
 
         ax.set_title("Category Share of Total Amount")
