@@ -83,3 +83,21 @@ if uploaded_file is not None:
 
 else:
     st.info("Upload a file from the sidebar to begin")
+
+# ---------------- SUMMARY DASHBOARD ----------------
+st.subheader("📊 Summary Dashboard")
+
+# Revenue count
+revenue_count = (df["Category"] == "Revenue").sum()
+
+# Bank charges count
+bank_charges = (df["Category"] == "Bank Charges").sum()
+
+# Loan / transfer count
+loan_count = df["Category"].str.contains("Loan", na=False).sum()
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Revenue Transactions", revenue_count)
+col2.metric("Bank Charges", bank_charges)
+col3.metric("Loan / Transfer", loan_count)
