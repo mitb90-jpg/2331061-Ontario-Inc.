@@ -39,7 +39,7 @@ if uploaded_file is not None:
     credit_mask = (
         df["Credit"].notna() &
         df["Description"].astype(str).str.contains(
-            "Deposit Midtown|Proceeds|Deposit Himilton",
+            "Proceeds|Deposit",
             case=False,
             na=False
         )
