@@ -31,24 +31,27 @@ uploaded_file = st.sidebar.file_uploader(
 # ---------------- MAIN APP ----------------
 if uploaded_file is not None:
 
-df = pd.read_excel(uploaded_file)
+    df = pd.read_excel(uploaded_file)
 
-# CLEAN DATA
-df.columns = df.columns.str.strip()
-df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
-df = df.dropna(axis=1, how="all")
-df = df.dropna(how="all")
+    # ---------------- CLEAN DATA ----------------
+    df.columns = df.columns.str.strip()
+
+    # ✅ REMOVE ALL UNNAMED COLUMNS (YOUR ISSUE FIX)
+    df = df.loc[:, ~df.columns.astype(str).str.contains("^Unnamed")]
+
+    df = df.dropna(axis=1, how="all")
+    df = df.dropna(how="all")
 
     # ---------------- FIX DATE FORMAT ----------------
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
 
+    # ---------------- RESET INDEX + SERIAL NUMBER ----------------
+    df = df.reset_index(drop=True)
+    df.insert(0, "S.No", range(1, len(df) + 1))
+
     # ---------------- CATEGORY COLUMN ----------------
     df["Category"] = ""
-
-    # ---------------- SERIAL NUMBER (SAFE) ----------------
-    if "S.No" not in df.columns:
-        df.insert(0, "S.No", range(1, len(df) + 1))
 
     # ---------------- CREDIT RULE ----------------
     credit_mask = (
