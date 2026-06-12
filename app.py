@@ -10,9 +10,17 @@ st.set_page_config(
 )
 
 # ---------------- HEADER ----------------
-st.title("🏢 Prime Accounting")
-st.subheader("Erin Mills - Numbered Corporation")
-st.caption("Automate bank statement classification and financial reporting")
+col1, col2 = st.columns([1, 4])
+
+with col1:
+    st.image("logo.png", width=140)
+
+with col2:
+    st.title("🏢 Prime Accounting and Tax")
+    st.subheader("Numbered Corporation")
+    st.caption("Automate bank statement classification and financial reporting")
+
+st.divider()
 
 # ---------------- SIDEBAR ----------------
 st.sidebar.header("Controls")
