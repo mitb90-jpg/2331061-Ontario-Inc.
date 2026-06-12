@@ -10,8 +10,9 @@ st.set_page_config(
 )
 
 # ---------------- HEADER ----------------
-st.title("📊 Smart Transaction Categorizer")
-st.caption("Automate bank statement classification in seconds")
+st.title("🏢 Prime Accounting")
+st.subheader("Erin Mills - Numbered Corporation")
+st.caption("Automate bank statement classification and financial reporting")
 
 # ---------------- SIDEBAR ----------------
 st.sidebar.header("Controls")
