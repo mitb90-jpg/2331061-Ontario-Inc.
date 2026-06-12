@@ -158,7 +158,7 @@ if uploaded_file is not None:
             autopct="%1.1f%%"
         )
 
-        ax.set_title("Category Share of Total Amount")
+        ax.set_title("Category Share - percentage wise")
 
         st.pyplot(fig)
 
