@@ -135,7 +135,7 @@ col7.metric("Loan Amount", f"${loan_amount:,.2f}")
 col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
     # ---------------- DOWNLOAD ----------------
-    output_file = "categorized_financials.xlsx"
+output_file = "categorized_financials.xlsx"
     df.to_excel(output_file, index=False)
 
     with open(output_file, "rb") as f:
