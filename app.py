@@ -11,9 +11,9 @@ st.set_page_config(
 )
 
 # ---------------- HEADER ----------------
-header_col1, header_col2 = st.columns([1, 6])
+col1, col2 = st.columns([1, 6])
 
-with header_col1:
+with col1:
     st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=100)
 
 with col2:
@@ -22,8 +22,6 @@ with col2:
         unsafe_allow_html=True
     )
     st.caption("2331061 Ontario Inc.")
-
-st.divider()
 
 # ---------------- FILE UPLOAD ----------------
 uploaded_file = st.sidebar.file_uploader(
