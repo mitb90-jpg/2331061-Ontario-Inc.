@@ -11,12 +11,12 @@ st.set_page_config(
 )
 
 # ---------------- HEADER ----------------
-col1, col2 = st.columns([1, 6])
+header_col1, header_col2 = st.columns([1, 6])
 
-with col1:
+with header_col1:
     st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=100)
 
-with col2:
+with header_col2:
     st.markdown("### Prime Accounting and Tax")
     st.caption("2331061 Ontario Inc.")
 
@@ -32,11 +32,10 @@ if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
+    # ---------------- CLEAN DATA ----------------
     df.columns = df.columns.astype(str).str.strip()
 
-    # clean columns
     df = df.loc[:, ~df.columns.str.contains("^Unnamed", na=False)]
-
     df = df.dropna(axis=1, how="all")
     df = df.dropna(how="all")
 
@@ -44,8 +43,8 @@ if uploaded_file is not None:
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
 
-    # ---------------- RESET INDEX + SERIAL NUMBER ----------------
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    # ---------------- CATEGORY COLUMN ----------------
+    df["Category"] = ""
 
     # ---------------- CREDIT RULE ----------------
     credit_mask = (
@@ -79,9 +78,9 @@ if uploaded_file is not None:
         "Category"
     ] = "Interest and Bank charges"
 
-    # ---------------- TABLE ----------------
+    # ---------------- FINAL TABLE ----------------
     st.subheader("📊 Categorized Transactions")
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
     # ---------------- SUMMARY ----------------
     st.subheader("📊 Summary Dashboard")
