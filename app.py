@@ -126,7 +126,7 @@ if uploaded_file is not None:
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
     # ---------------- PIE CHART ----------------
-    st.subheader("🥧 Category Distribution by Amount")
+    st.subheader("🥧 Financial Distribution")
 
     amounts = {
         "Revenue": revenue_amount,
@@ -148,7 +148,7 @@ if uploaded_file is not None:
             autopct="%1.1f%%"
         )
 
-        ax.set_title("Financial Distribution by Amount")
+        ax.set_title("Category Share of Total Amount")
 
         st.pyplot(fig)
 
