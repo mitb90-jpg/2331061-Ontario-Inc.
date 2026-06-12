@@ -49,6 +49,8 @@ df = df.dropna(axis=1, how="all")
 # Reset index properly
 df = df.reset_index(drop=True)
 
+st.write(df.columns)
+
     # ---------------- FIX DATE FORMAT ----------------
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
