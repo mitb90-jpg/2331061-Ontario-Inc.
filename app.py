@@ -46,7 +46,7 @@ with col1:
 
 with col2:
     st.markdown('<div class="main-title">Prime Accounting and Tax</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">Numbered Corporation Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">2331061 Ontario Inc.</div>', unsafe_allow_html=True)
 
 st.divider()
 
@@ -61,13 +61,17 @@ if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
-    # CLEAN DATA
-    df.columns = df.columns.str.strip()
-    df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
-    df = df.dropna(axis=1, how="all")
-    df = df.dropna(how="all")
+# CLEAN DATA
+df.columns = df.columns.str.strip()
+df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
+df = df.dropna(axis=1, how="all")
+df = df.dropna(how="all")
 
-    df.insert(0, "S.No", range(1, len(df) + 1))
+# CATEGORY COLUMN
+df["Category"] = ""
+
+# SERIAL NUMBER (ADD HERE)
+df.insert(0, "S.No", range(1, len(df) + 1))
 
     # CREDIT RULE
     credit_mask = (
