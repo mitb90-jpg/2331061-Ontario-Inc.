@@ -152,6 +152,15 @@ if uploaded_file is not None:
 
         st.pyplot(fig)
 
+    st.subheader("📋 Category Amounts")
+
+summary_df = pd.DataFrame({
+    "Category": amounts.keys(),
+    "Amount": amounts.values()
+})
+
+st.dataframe(summary_df, use_container_width=True)
+
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
 
