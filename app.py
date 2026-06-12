@@ -136,7 +136,7 @@ col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
     # ---------------- DOWNLOAD ----------------
 output_file = "categorized_financials.xlsx"
-    df.to_excel(output_file, index=False)
+df.to_excel(output_file, index=False)
 
     with open(output_file, "rb") as f:
         st.download_button(
