@@ -47,9 +47,6 @@ if uploaded_file is not None:
     # ---------------- RESET INDEX + SERIAL NUMBER ----------------
     st.dataframe(df, use_container_width=True, hide_index=True)
 
-    # ---------------- CATEGORY COLUMN ----------------
-    df["Category"] = ""
-
     # ---------------- CREDIT RULE ----------------
     credit_mask = (
         df["Credit"].notna() &
