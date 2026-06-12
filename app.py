@@ -159,7 +159,11 @@ summary_df = pd.DataFrame({
     "Amount": [f"${v:,.2f}" for v in amounts.values()]
 })
 
-st.dataframe(summary_df, use_container_width=True)
+st.dataframe(
+    summary_df,
+    use_container_width=True,
+    hide_index=True
+)
 
 # ---------------- DOWNLOAD ----------------
 output_file = "categorized_financials.xlsx"
