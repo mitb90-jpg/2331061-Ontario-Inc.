@@ -31,11 +31,13 @@ uploaded_file = st.sidebar.file_uploader(
 # ---------------- MAIN APP ----------------
 if uploaded_file is not None:
 
-    df = pd.read_excel(uploaded_file)
+df = pd.read_excel(uploaded_file)
 
-    # ---------------- CLEAN DATA ----------------
-df.insert(0, "S.No", range(1, len(df) + 1))
-df = df.reset_index(drop=True)
+# CLEAN DATA
+df.columns = df.columns.str.strip()
+df = df.loc[:, ~df.columns.astype(str).str.startswith("Unnamed")]
+df = df.dropna(axis=1, how="all")
+df = df.dropna(how="all")
 
     # ---------------- FIX DATE FORMAT ----------------
     if "Date" in df.columns:
