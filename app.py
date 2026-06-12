@@ -70,7 +70,7 @@ if uploaded_file is not None:
         df["Debit"].notna() &
         df["Description"].astype(str).str.contains("SERVICE CHARGE", case=False, na=False),
         "Category"
-    ] = "Bank Charges"
+    ] = "Interest and Bank charges"
 
     # ---------------- OUTPUT TABLE ----------------
     st.subheader("📊 Categorized Transactions")
