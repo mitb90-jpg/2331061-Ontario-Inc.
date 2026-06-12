@@ -33,14 +33,21 @@ if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
-    # ---------------- CLEAN DATA ----------------
-    df.columns = df.columns.str.strip()
+# ---------------- CLEAN DATA (FINAL FIX) ----------------
 
-    # ✅ REMOVE ALL UNNAMED COLUMNS (YOUR ISSUE FIX)
-    df = df.loc[:, ~df.columns.astype(str).str.contains("^Unnamed")]
+df.columns = df.columns.astype(str).str.strip()
 
-    df = df.dropna(axis=1, how="all")
-    df = df.dropna(how="all")
+# Remove ALL types of junk columns (Unnamed, empty, index-like, blank)
+df = df.loc[:, ~df.columns.str.contains("^Unnamed", na=False)]
+df = df.loc[:, ~df.columns.str.fullmatch(r"")]
+df = df.loc[:, ~df.columns.str.fullmatch("0")]
+df = df.loc[:, df.columns.notna()]
+
+# Drop fully empty columns
+df = df.dropna(axis=1, how="all")
+
+# Reset index properly
+df = df.reset_index(drop=True)
 
     # ---------------- FIX DATE FORMAT ----------------
     if "Date" in df.columns:
