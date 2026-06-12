@@ -78,28 +78,29 @@ if uploaded_file is not None:
 
     # ---------------- SUMMARY DASHBOARD ----------------
 
-st.subheader("📊 Summary Dashboard")
+# ---------------- FINANCIAL SUMMARY ----------------
+st.subheader("📊 Financial Summary")
 
-revenue_count = (df["Category"] == "Revenue").sum()
+revenue_amount = df.loc[
+    df["Category"] == "Revenue",
+    "Credit"
+].fillna(0).sum()
 
-bank_charges_count = (
-    df["Category"] == "Interest and Bank charges"
-).sum()
+investment_amount = df.loc[
+    df["Category"] == "Investment income",
+    "Debit"
+].fillna(0).sum()
 
-loan_count = (
-    df["Category"] == "Loan to world eyewear"
-).sum()
+bank_charge_amount = df.loc[
+    df["Category"] == "Interest and Bank charges",
+    "Debit"
+].fillna(0).sum()
 
-investment_count = (
-    df["Category"] == "Investment income"
-).sum()
+col1, col2, col3 = st.columns(3)
 
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric("Revenue Transactions", revenue_count)
-col2.metric("Bank Charges", bank_charges_count)
-col3.metric("Loan Transactions", loan_count)
-col4.metric("Investment Income Transactions", investment_count)
+col1.metric("Revenue ($)", f"{revenue_amount:,.2f}")
+col2.metric("Investment Income ($)", f"{investment_amount:,.2f}")
+col3.metric("Bank Charges ($)", f"{bank_charge_amount:,.2f}")
 
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
