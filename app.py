@@ -9,21 +9,55 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown(
+    """
+    <style>
+    /* Main title */
+    .main-title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #1f4e79;
+    }
+
+    /* Sub header */
+    .sub-title {
+        font-size: 18px;
+        color: #6c757d;
+    }
+
+    /* Section headers */
+    .section {
+        font-size: 22px;
+        font-weight: 600;
+        color: #0b3d91;
+        margin-top: 20px;
+    }
+
+    /* Metric cards spacing */
+    div[data-testid="metric-container"] {
+        background-color: #f4f6f9;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # ---------------- HEADER ----------------
-col1, col2 = st.columns([1, 5])
+col1, col2 = st.columns([1, 6])
 
 with col1:
-    st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=120)
+    st.image("WhatsApp Image 2026-06-12 at 5.22.49 PM.jpeg", width=100)
 
 with col2:
-    st.title("🏢 Prime Accounting and Tax")
-    st.subheader("Numbered Corporation")
-    st.caption("Automate bank statement classification and financial reporting")
+    st.markdown('<div class="main-title">Prime Accounting and Tax</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">Numbered Corporation Dashboard</div>', unsafe_allow_html=True)
 
 st.divider()
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.header("Controls")
+st.markdown('<div class="section">📊 Summary Dashboard</div>', unsafe_allow_html=True)
 
 uploaded_file = st.sidebar.file_uploader(
     "Upload Excel File",
@@ -98,7 +132,20 @@ if uploaded_file is not None:
     st.subheader("📊 Categorized Transactions")
     st.dataframe(df, use_container_width=True)
 
-    # SUMMARY DASHBOARD
+    st.markdown(
+    """
+    <div style="
+        background-color:#eef4ff;
+        padding:15px;
+        border-radius:10px;
+        margin-bottom:15px;">
+        <h4 style="color:#0b3d91;">Financial Overview</h4>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+      # SUMMARY DASHBOARD
     st.subheader("📊 Summary Dashboard")
 
     revenue_count = (df["Category"] == "Revenue").sum()
@@ -145,6 +192,19 @@ if uploaded_file is not None:
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
+st.markdown(
+    """
+    <div style="
+        background-color:#fff4e6;
+        padding:15px;
+        border-radius:10px;
+        margin-bottom:10px;">
+        <h4 style="color:#b45309;">🥧 Category Distribution</h4>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
     # PIE CHART
     st.subheader("🥧 Financial Distribution")
 
@@ -169,6 +229,19 @@ if uploaded_file is not None:
         ax.set_title("Category percentage share")
 
         st.pyplot(fig)
+
+st.markdown(
+    """
+    <div style="
+        background-color:#f0fdf4;
+        padding:15px;
+        border-radius:10px;
+        margin-bottom:10px;">
+        <h4 style="color:#166534;">📋 Transaction Table</h4>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
     # CATEGORY AMOUNTS TABLE
     st.subheader("📋 Category Amounts")
