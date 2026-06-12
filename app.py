@@ -78,9 +78,33 @@ if uploaded_file is not None:
 
     # ---------------- SUMMARY DASHBOARD ----------------
 
-# ---------------- FINANCIAL SUMMARY ----------------
-st.subheader("📊 Financial Summary")
+st.subheader("📊 Summary Dashboard")
 
+# Transaction Counts
+revenue_count = (df["Category"] == "Revenue").sum()
+
+bank_charges_count = (
+    df["Category"] == "Interest and Bank charges"
+).sum()
+
+loan_count = (
+    df["Category"] == "Loan to world eyewear"
+).sum()
+
+investment_count = (
+    df["Category"] == "Investment income"
+).sum()
+
+st.markdown("### Transaction Counts")
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("Revenue Transactions", revenue_count)
+col2.metric("Bank Charges", bank_charges_count)
+col3.metric("Loan Transactions", loan_count)
+col4.metric("Investment Income Transactions", investment_count)
+
+# Financial Amounts
 revenue_amount = df.loc[
     df["Category"] == "Revenue",
     "Credit"
@@ -96,11 +120,19 @@ bank_charge_amount = df.loc[
     "Debit"
 ].fillna(0).sum()
 
-col1, col2, col3 = st.columns(3)
+loan_amount = df.loc[
+    df["Category"] == "Loan to world eyewear",
+    "Debit"
+].fillna(0).sum()
 
-col1.metric("Revenue ($)", f"{revenue_amount:,.2f}")
-col2.metric("Investment Income ($)", f"{investment_amount:,.2f}")
-col3.metric("Bank Charges ($)", f"{bank_charge_amount:,.2f}")
+st.markdown("### Financial Amounts")
+
+col5, col6, col7, col8 = st.columns(4)
+
+col5.metric("Revenue Amount", f"${revenue_amount:,.2f}")
+col6.metric("Investment Income Amount", f"${investment_amount:,.2f}")
+col7.metric("Loan Amount", f"${loan_amount:,.2f}")
+col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
