@@ -134,23 +134,27 @@ if uploaded_file is not None:
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
-    # ---------------- CATEGORY PIE CHART ----------------
-st.subheader("🥧 Category Distribution")
+# ---------------- CATEGORY PIE CHART BY AMOUNT ----------------
+st.subheader("🥧 Category Distribution by Amount")
 
-category_counts = (
-    df["Category"]
-    .value_counts()
-)
+amounts = {
+    "Revenue": revenue_amount,
+    "Investment Income": investment_amount,
+    "Loan": loan_amount,
+    "Bank Charges": bank_charge_amount
+}
+
+amounts = {k: v for k, v in amounts.items() if v > 0}
 
 fig, ax = plt.subplots(figsize=(6, 6))
 
 ax.pie(
-    category_counts,
-    labels=category_counts.index,
+    amounts.values(),
+    labels=amounts.keys(),
     autopct="%1.1f%%"
 )
 
-ax.set_title("Transaction Categories")
+ax.set_title("Financial Distribution by Amount")
 
 st.pyplot(fig)
 
