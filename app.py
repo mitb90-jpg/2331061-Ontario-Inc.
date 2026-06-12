@@ -45,8 +45,7 @@ if uploaded_file is not None:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
 
     # ---------------- RESET INDEX + SERIAL NUMBER ----------------
-    df = df.reset_index(drop=True)
-    df.insert(0, "S.No", range(1, len(df) + 1))
+st.dataframe(df, use_container_width=True, hide_index=True)
 
     # ---------------- CATEGORY COLUMN ----------------
     df["Category"] = ""
