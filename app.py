@@ -77,17 +77,29 @@ if uploaded_file is not None:
     st.dataframe(df, use_container_width=True)
 
     # ---------------- SUMMARY DASHBOARD ----------------
-    st.subheader("📊 Summary Dashboard")
 
-    revenue_count = (df["Category"] == "Revenue").sum()
-    service_charges = (df["Category"] == "Interest and Bank Charges").sum()
-    loan_count = df["Category"].str.contains("Loan", na=False).sum()
+st.subheader("📊 Summary Dashboard")
 
-    col1, col2, col3 = st.columns(3)
+revenue_count = (df["Category"] == "Revenue").sum()
 
-    col1.metric("Revenue Transactions", revenue_count)
-    col2.metric("Interest and Bank Charges", service_charges)
-    col3.metric("Investment income / Loan to world eyewear", loan_count)
+bank_charges_count = (
+    df["Category"] == "Interest and Bank charges"
+).sum()
+
+loan_count = (
+    df["Category"] == "Loan to world eyewear"
+).sum()
+
+investment_count = (
+    df["Category"] == "Investment income"
+).sum()
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("Revenue Transactions", revenue_count)
+col2.metric("Bank Charges", bank_charges_count)
+col3.metric("Loan Transactions", loan_count)
+col4.metric("Investment Income Transactions", investment_count)
 
     # ---------------- DOWNLOAD ----------------
     output_file = "categorized_financials.xlsx"
