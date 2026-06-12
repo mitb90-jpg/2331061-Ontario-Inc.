@@ -80,13 +80,13 @@ if uploaded_file is not None:
     st.subheader("📊 Summary Dashboard")
 
     revenue_count = (df["Category"] == "Revenue").sum()
-    bank_charges = (df["Category"] == "Interest and Bank Charges").sum()
+    service_charges = (df["Category"] == "Interest and Bank Charges").sum()
     loan_count = df["Category"].str.contains("Loan", na=False).sum()
 
     col1, col2, col3 = st.columns(3)
 
     col1.metric("Revenue Transactions", revenue_count)
-    col2.metric("Interest and Bank Charges", bank_charges)
+    col2.metric("Interest and Bank Charges", service_charges)
     col3.metric("Investment income / Loan to world eyewear", loan_count)
 
     # ---------------- DOWNLOAD ----------------
