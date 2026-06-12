@@ -10,7 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- HEADER ----------------
 col1, col2 = st.columns([1, 6])
 
 with col1:
@@ -18,10 +17,14 @@ with col1:
 
 with col2:
     st.markdown(
-        "<h1 style='color:#1f4e79; font-size:42px; font-weight:bold;'>Prime Accounting and Tax</h1>",
+        "<h1 style='color:#1f4e79; font-size:42px; font-weight:bold; margin-bottom:0;'>Prime Accounting and Tax</h1>",
         unsafe_allow_html=True
     )
-    st.caption("2331061 Ontario Inc.")
+
+    st.markdown(
+        "<p style='font-size:20px; color:gray; margin-top:0;'>2331061 Ontario Inc.</p>",
+        unsafe_allow_html=True
+    )
 
 # ---------------- FILE UPLOAD ----------------
 uploaded_file = st.sidebar.file_uploader(
