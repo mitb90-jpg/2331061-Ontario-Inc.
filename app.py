@@ -125,41 +125,50 @@ if uploaded_file is not None:
     col7.metric("Loan Amount", f"${loan_amount:,.2f}")
     col8.metric("Bank Charges Amount", f"${bank_charge_amount:,.2f}")
 
-    # ---------------- PIE CHART ----------------
-    st.subheader("🥧 Financial Distribution")
+# ---------------- PIE CHART ----------------
+st.subheader("🥧 Financial Distribution")
 
-    amounts = {
-        "Revenue": revenue_amount,
-        "Investment Income": investment_amount,
-        "Loan": loan_amount,
-        "Bank Charges": bank_charge_amount
-    }
+amounts = {
+    "Revenue": revenue_amount,
+    "Investment Income": investment_amount,
+    "Loan": loan_amount,
+    "Bank Charges": bank_charge_amount
+}
 
-    amounts = {k: v for k, v in amounts.items() if v > 0}
+amounts = {k: v for k, v in amounts.items() if v > 0}
 
-    if amounts:
-        import matplotlib.pyplot as plt
+if amounts:
 
-        fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(6, 6))
 
-        ax.pie(
-            amounts.values(),
-            labels=amounts.keys(),
-            autopct=lambda pct: f"${pct/100 * sum(amounts.values()):,.0f}"
-        )
+    ax.pie(
+        amounts.values(),
+        labels=amounts.keys(),
+        autopct="%1.1f%%"
+    )
 
-        ax.set_title("Category Share of Total Amount")
+    ax.set_title("Category Share of Total Amount")
 
-        st.pyplot(fig)
+    st.pyplot(fig)
 
-    # ---------------- DOWNLOAD ----------------
-    output_file = "categorized_financials.xlsx"
+# ---------------- CATEGORY AMOUNTS TABLE ----------------
+st.subheader("📋 Category Amounts")
 
-    df.to_excel(output_file, index=False)
+summary_df = pd.DataFrame({
+    "Category": list(amounts.keys()),
+    "Amount": [f"${v:,.2f}" for v in amounts.values()]
+})
 
-    with open(output_file, "rb") as f:
-        st.download_button(
-            "⬇️ Download Categorized File",
-            f,
-            file_name="categorized_financials.xlsx"
-        )
+st.dataframe(summary_df, use_container_width=True)
+
+# ---------------- DOWNLOAD ----------------
+output_file = "categorized_financials.xlsx"
+
+df.to_excel(output_file, index=False)
+
+with open(output_file, "rb") as f:
+    st.download_button(
+        "⬇️ Download Categorized File",
+        f,
+        file_name="categorized_financials.xlsx"
+    )
