@@ -78,9 +78,13 @@ if uploaded_file is not None:
         "Category"
     ] = "Interest and Bank charges"
 
-    # ---------------- FINAL TABLE ----------------
-    st.subheader("📊 Categorized Transactions")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+# ---------------- ADD Sr. No ----------------
+df = df.reset_index(drop=True)
+df.insert(0, "Sr. No", range(1, len(df) + 1))
+
+# ---------------- FINAL TABLE ----------------
+st.subheader("📊 Categorized Transactions")
+st.dataframe(df, use_container_width=True, hide_index=True)
 
     # ---------------- SUMMARY ----------------
     st.subheader("📊 Summary Dashboard")
