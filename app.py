@@ -28,30 +28,19 @@ uploaded_file = st.sidebar.file_uploader(
     type=["xlsx"]
 )
 
-# ---------------- MAIN APP ----------------
 if uploaded_file is not None:
 
     df = pd.read_excel(uploaded_file)
 
-# ---------------- CLEAN DATA (FINAL FIX) ----------------
+    df.columns = df.columns.astype(str).str.strip()
 
-df.columns = df.columns.astype(str).str.strip()
+    # clean columns
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed", na=False)]
 
-# Remove ALL types of junk columns (Unnamed, empty, index-like, blank)
-df = df.loc[:, ~df.columns.str.contains("^Unnamed", na=False)]
-df = df.loc[:, ~df.columns.str.fullmatch(r"")]
-df = df.loc[:, ~df.columns.str.fullmatch("0")]
-df = df.loc[:, df.columns.notna()]
+    df = df.dropna(axis=1, how="all")
+    df = df.dropna(how="all")
 
-# Drop fully empty columns
-df = df.dropna(axis=1, how="all")
-
-# Reset index properly
-df = df.reset_index(drop=True)
-
-st.write(df.columns)
-
-    # ---------------- FIX DATE FORMAT ----------------
+    # ---------------- DATE FIX ----------------
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
 
