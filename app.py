@@ -150,7 +150,7 @@ if uploaded_file is not None:
     st.download_button(
         "⬇️ Download Excel File",
         data=output,
-        file_name="2331061_Ontario_Inc.xlsx",
+        file_name="Auto_categorised_file_2331061_Ontario_Inc.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
