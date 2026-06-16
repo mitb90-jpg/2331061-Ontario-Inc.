@@ -1,5 +1,5 @@
-streamlit
-pandas
+pdfplumber
 openpyxl
+pandas
+streamlit
 numpy
-matplotlib
